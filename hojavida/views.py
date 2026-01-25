@@ -711,7 +711,7 @@ def descargar_cv_pdf(request):
     # Convertir a PDF usando pdfkit
     try:
         config = pdfkit.configuration(
-            wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
+            wkhtmltopdf=r"c:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
         )
         
         options = {
