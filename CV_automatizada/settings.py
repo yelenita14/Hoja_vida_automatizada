@@ -27,6 +27,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-gn&ae8wk1xd+0s@z3dpj_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
+LOGOUT_URL = '/login/'
 LOGIN_REDIRECT_URL = '/panel-admin/'
 LOGOUT_REDIRECT_URL = '/login/'
 
