@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse
 from datetime import datetime
+from django.contrib import messages
 from .models import DATOSPERSONALES, EXPERIENCIALABORAL, CURSOSREALIZADOS, RECONOCIMIENTOS, PRODUCTOSACADEMICOS, PRODUCTOSLABORALES, VENTAS
 
 # Vista para mostrar la hoja de vida sin iniciar sesión
@@ -68,12 +69,12 @@ def login_view(request):
             login(request, user)
 
             next_url = request.GET.get('next')
-            if next_url:
-                return redirect(next_url)
-
-            return redirect('panel_admin')
+            return redirect(next_url or 'panel_admin')
+        else:
+            messages.error(request, "Usuario o contraseña incorrectos")
 
     return render(request, 'hojavida/login.html')
+
 
 # Vista para logout
 def logout_view(request):
@@ -102,7 +103,6 @@ def panel_admin(request):
     })
 
 # Vistas para Agregar
-@login_required
 @login_required
 def agregar_datos(request):
     if request.method == 'POST':
@@ -148,7 +148,6 @@ def agregar_datos(request):
 
     return render(request, 'hojavida/agregar_datos.html')
 
-@login_required
 @login_required
 def agregar_experiencia(request):
     if request.method == 'POST':
