@@ -31,7 +31,12 @@ LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'mi_hoja_vida'
 
 # Configuración de acceso público a la hoja de vida
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = [
+    'karen-anchundia-hoja-vida-profesional.onrender.com',
+    'localhost',
+    '127.0.0.1',
+]
+
 
 
 # Application definition
