@@ -3,8 +3,14 @@ services:
     name: proyecto-adbd
     env: python
     plan: free
-    buildCommand: "pip install -r requirements.txt && python manage.py migrate"
-    startCommand: "gunicorn CV_automatizada.wsgi:application"
+
+    buildCommand: |
+      chmod +x bin/wkhtmltopdf
+      pip install -r requirements.txt
+      python manage.py migrate
+
+    startCommand: gunicorn CV_automatizada.wsgi:application
+
     envVars:
       - key: DEBUG
         value: "False"

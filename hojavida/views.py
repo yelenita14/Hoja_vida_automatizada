@@ -1,4 +1,5 @@
 import os
+from django.conf import settings
 from django.template.loader import render_to_string
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -711,9 +712,9 @@ def descargar_cv_pdf(request):
     # Convertir a PDF usando pdfkit
     try:
         config = pdfkit.configuration(
-            wkhtmltopdf=r"c:\Program Files\wkhtmltopdf\bin"
+            wkhtmltopdf=settings.WKHTMLTOPDF_PATH
         )
-        
+
         options = {
             'page-size': 'A4',
             'margin-top': '0.5in',

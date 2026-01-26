@@ -1,13 +1,14 @@
+import pdfkit
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.conf import settings
+import base64
+import os
+from .models import (DATOSPERSONALES, EXPERIENCIALABORAL, CURSOSREALIZADOS, 
+                         RECONOCIMIENTOS, ProductosAcademicos, ProductosLaborales, Ventas)
 # Función para descargar CV en PDF
 def descargar_cv_pdf(request):
-    import pdfkit
-    from django.http import HttpResponse
-    from django.template.loader import render_to_string
-    from .models import (DATOSPERSONALES, EXPERIENCIALABORAL, CURSOSREALIZADOS, 
-                         RECONOCIMIENTOS, ProductosAcademicos, ProductosLaborales, Ventas)
-    import base64
-    import os
-    
+
     # Obtener datos
     datos = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
     
@@ -130,6 +131,9 @@ def descargar_cv_pdf(request):
     
     # Convertir a PDF usando pdfkit
     try:
+        config = pdfkit.configuration(
+            wkhtmltopdf=settings.WKHTMLTOPDF_PATH
+        )
         options = {
             'page-size': 'A4',
             'margin-top': '0.5in',
@@ -141,7 +145,12 @@ def descargar_cv_pdf(request):
             'enable-local-file-access': None,
         }
         
-        pdf = pdfkit.from_string(html_string, False, options=options)
+        pdf = pdfkit.from_string(
+            html_string,
+            False,
+            options=options,
+            configuration=config
+        )
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="Hoja_de_Vida.pdf"'
         return response
