@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
-# Salir si ocurre un error
 set -o errexit
 
-# Actualizar paquetes e instalar wkhtmltopdf
-apt-get update
-apt-get install -y wkhtmltopdf
+# Dar permisos al binario
+chmod +x bin/wkhtmltopdf
 
 # Instalar librerías Python
 pip install -r requirements.txt
@@ -12,12 +10,12 @@ pip install -r requirements.txt
 # Archivos estáticos
 python manage.py collectstatic --no-input
 
-# Crear las tablas en la base de datos de Render (Postgres)
+# Migraciones
 python manage.py makemigrations
 python manage.py migrate --run-syncdb
 python manage.py migrate
 
-# Crear tu usuario automáticamente si no existe
+# Crear usuario admin
 python manage.py shell << END
 from django.contrib.auth import get_user_model
 User = get_user_model()
