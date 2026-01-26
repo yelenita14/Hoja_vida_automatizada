@@ -4,11 +4,15 @@ services:
     env: python
     plan: free
 
+    # Build: instalar wkhtmltopdf + dependencias + migraciones
     buildCommand: |
-      chmod +x bin/wkhtmltopdf
+      apt-get update
+      apt-get install -y wkhtmltopdf
       pip install -r requirements.txt
       python manage.py migrate
+      python manage.py collectstatic --no-input
 
+    # Start command
     startCommand: gunicorn CV_automatizada.wsgi:application
 
     envVars:
