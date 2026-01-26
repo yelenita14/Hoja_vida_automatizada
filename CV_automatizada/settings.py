@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'CV_automatizada.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL')
+        default='sqlite:///db.sqlite3'
     )
 }
 
