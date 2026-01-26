@@ -66,7 +66,8 @@
             <div class="form-group">
                 <label>Fecha de nacimiento</label>
                 <input type="date" name="fechanacimiento"
-                       value="{{ datos.fechanacimiento|date:'Y-m-d' }}" redonly>
+                       value="{{ datos.fechanacimiento|date:'Y-m-d' }}" disabled>
+                <small style="color: gray;">La fecha de nacimiento no se puede editar.</small>
             </div>
 
             <!-- cédula -->
@@ -172,11 +173,5 @@
         </form>
     </div>
 </div>
-
-<script>
-    // Validar que la fecha de nacimiento no sea en el futuro
-    document.querySelector('input[name="fechanacimiento"]').max = new Date().toISOString().split('T')[0];
-</script>
-
 </body>
 </html>

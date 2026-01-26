@@ -293,56 +293,39 @@ def agregar_reconocimiento(request):
 @login_required
 def editar_datos(request):
     datos = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
-    
-    if request.method == 'POST':
-        from django.utils import timezone
-        from datetime import datetime
-        
-        # Validar fecha de nacimiento
-        fechanacimiento_str = request.POST.get('fechanacimiento')
-        error = None
-        
-        if fechanacimiento_str:
-            fechanacimiento = datetime.strptime(fechanacimiento_str, '%Y-%m-%d').date()
-            if fechanacimiento > timezone.now().date():
-                error = 'La fecha de nacimiento no puede ser en el futuro.'
-        
-        if error:
-            return render(request, 'hojavida/editar_datos.html', {'datos': datos, 'error': error})
-        
-        if datos:
-            datos.nombres = request.POST.get('nombres', datos.nombres)
-            datos.apellidos = request.POST.get('apellidos', datos.apellidos)
-            datos.nacionalidad = request.POST.get('nacionalidad', datos.nacionalidad)
-            datos.lugarnacimiento = request.POST.get('lugarnacimiento', datos.lugarnacimiento)
-            
-            # Evitar modificar la fecha de nacimiento
-            if fechanacimiento_str and not datos.fechanacimiento:
-                datos.fechanacimiento = fechanacimiento_str  # Solo actualizar si está vacía
 
-            datos.numerocedula = request.POST.get('numerocedula', datos.numerocedula)
-            datos.sexo = request.POST.get('sexo', datos.sexo)
-            datos.estadocivil = request.POST.get('estadocivil', datos.estadocivil)
-            datos.licenciaconducir = request.POST.get('licenciaconducir', datos.licenciaconducir)
-            datos.telefonoconvencional = request.POST.get('telefonoconvencional', datos.telefonoconvencional)
-            datos.telefonofijo = request.POST.get('telefonofijo', datos.telefonofijo)
-            datos.direcciontrabajo = request.POST.get('direcciontrabajo', datos.direcciontrabajo)
-            datos.direcciondomiciliaria = request.POST.get('direcciondomiciliaria', datos.direcciondomiciliaria)
-            datos.sitioweb = request.POST.get('sitioweb', datos.sitioweb)
-            datos.mostrar_experiencia = 1 if request.POST.get('mostrar_experiencia') else 0
-            datos.mostrar_cursos = 1 if request.POST.get('mostrar_cursos') else 0
-            datos.mostrar_reconocimientos = 1 if request.POST.get('mostrar_reconocimientos') else 0
-            datos.mostrar_productos_academicos = 1 if request.POST.get('mostrar_productos_academicos') else 0
-            datos.mostrar_productos_laborales = 1 if request.POST.get('mostrar_productos_laborales') else 0
-            datos.mostrar_ventas = 1 if request.POST.get('mostrar_ventas') else 0
-            
-            if 'foto' in request.FILES:
-                datos.foto = request.FILES['foto']
-                
-            datos.save()
+    if request.method == 'POST' and datos:
+        # 🔒 Guardar fecha original
+        fecha_original = datos.fechanacimiento
 
+        datos.nombres = request.POST.get('nombres', datos.nombres)
+        datos.apellidos = request.POST.get('apellidos', datos.apellidos)
+        datos.nacionalidad = request.POST.get('nacionalidad', datos.nacionalidad)
+        datos.lugarnacimiento = request.POST.get('lugarnacimiento', datos.lugarnacimiento)
+        datos.numerocedula = request.POST.get('numerocedula', datos.numerocedula)
+        datos.sexo = request.POST.get('sexo', datos.sexo)
+        datos.estadocivil = request.POST.get('estadocivil', datos.estadocivil)
+        datos.licenciaconducir = request.POST.get('licenciaconducir', datos.licenciaconducir)
+        datos.telefonofijo = request.POST.get('telefonofijo', datos.telefonofijo)
+        datos.direcciondomiciliaria = request.POST.get('direcciondomiciliaria', datos.direcciondomiciliaria)
+        datos.sitioweb = request.POST.get('sitioweb', datos.sitioweb)
+
+        datos.mostrar_experiencia = 1 if request.POST.get('mostrar_experiencia') else 0
+        datos.mostrar_cursos = 1 if request.POST.get('mostrar_cursos') else 0
+        datos.mostrar_reconocimientos = 1 if request.POST.get('mostrar_reconocimientos') else 0
+        datos.mostrar_productos_academicos = 1 if request.POST.get('mostrar_productos_academicos') else 0
+        datos.mostrar_productos_laborales = 1 if request.POST.get('mostrar_productos_laborales') else 0
+        datos.mostrar_ventas = 1 if request.POST.get('mostrar_ventas') else 0
+
+        if 'foto' in request.FILES:
+            datos.foto = request.FILES['foto']
+
+        # 🔐 Restaurar fecha (no editable)
+        datos.fechanacimiento = fecha_original
+
+        datos.save()
         return redirect('panel_admin')
-    
+
     return render(request, 'hojavida/editar_datos.html', {'datos': datos})
 
 @login_required
