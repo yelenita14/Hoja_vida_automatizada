@@ -3,13 +3,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Venta Garage</title>
+    <title>Editar Curso</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
 
 <div class="header">
-    <h1>Venta Garage</h1>
+    <h1>Editar Curso</h1>
     <a href="{% url 'panel_admin' %}" class="logout-btn">Volver</a>
 </div>
 
@@ -18,56 +18,66 @@
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
-            <!-- nombre producto -->
+            <!-- nombre curso -->
             <div class="form-group">
-                <label>Nombre del producto</label>
-                <input type="text" name="nombreproducto" required>
+                <label>Nombre del curso</label>
+                <input type="text" name="nombrecurso"
+                       value="{{ curso.nombrecurso }}" required>
             </div>
 
-            <!-- estado producto -->
+            <!-- entidad -->
             <div class="form-group">
-                <label>Estado del producto</label>
-                <select name="estadoproducto" required>
-                    <option value="">Seleccione</option>
-                    <option value="Bueno">Bueno</option>
-                    <option value="Regular">Regular</option>
-                </select>
+                <label>Entidad patrocinadora</label>
+                <input type="text" name="entidadpatrocinadora"
+                       value="{{ curso.entidadpatrocinadora }}">
             </div>
 
-            <!-- valor -->
+            <!-- fechas -->
             <div class="form-group">
-                <label>Valor del bien</label>
-                <input type="number" name="valordelbien" step="0.01">
+                <label>Fecha inicio</label>
+                <input type="date" name="fechainicio"
+                       value="{{ curso.fechainicio|date:'Y-m-d' }}">
+            </div>
+
+            <div class="form-group">
+                <label>Fecha fin</label>
+                <input type="date" name="fechafin"
+                       value="{{ curso.fechafin|date:'Y-m-d' }}">
+            </div>
+
+            <!-- horas -->
+            <div class="form-group">
+                <label>Total de horas</label>
+                <input type="number" name="totalhoras"
+                       value="{{ curso.totalhoras }}">
             </div>
 
             <!-- descripción -->
             <div class="form-group">
                 <label>Descripción</label>
-                <textarea name="descripcion" rows="4"></textarea>
+                <textarea name="descripcion" rows="4">{{ curso.descripcion }}</textarea>
             </div>
 
-            <!-- imagen -->
+            <!-- certificado -->
             <div class="form-group">
-                <label>Imagen del producto</label>
-                <input type="file" name="imagen" accept="image/*">
-            </div>
-
-            <!-- fecha publicación -->
-            <div class="form-group">
-                <label>Fecha de publicación</label>
-                <input type="date" name="fechapublicacion">
+                <label>Certificado (archivo)</label>
+                {% if curso.archivo_certificado %}
+                    <p><a href="{{ curso.archivo_certificado.url }}" target="_blank">Descargar archivo actual</a></p>
+                {% endif %}
+                <input type="file" name="archivo_certificado" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
             </div>
 
             <!-- visible en front -->
             <div class="form-group">
                 <label>
-                    <input type="checkbox" name="activarparaqueseveaenfront" checked>
-                    Mostrar en el front
+                    <input type="checkbox" name="activarparaqueseveaenfront"
+                           {% if curso.activarparaqueseveaenfront %}checked{% endif %}>
+                    Mostrar en la hoja de vida
                 </label>
             </div>
 
             <button type="submit" class="btn btn-primary">
-                Guardar Venta
+                Actualizar Curso
             </button>
         </form>
     </div>
