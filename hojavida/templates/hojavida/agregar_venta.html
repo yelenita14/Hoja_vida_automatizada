@@ -3,13 +3,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Curso</title>
+    <title>Venta Garage</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
 
 <div class="header">
-    <h1>Editar Curso</h1>
+    <h1>Venta Garage</h1>
     <a href="{% url 'panel_admin' %}" class="logout-btn">Volver</a>
 </div>
 
@@ -18,66 +18,56 @@
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
-            <!-- nombre curso -->
+            <!-- nombre producto -->
             <div class="form-group">
-                <label>Nombre del curso</label>
-                <input type="text" name="nombrecurso"
-                       value="{{ curso.nombrecurso }}" required>
+                <label>Nombre del producto</label>
+                <input type="text" name="nombreproducto" required>
             </div>
 
-            <!-- entidad -->
+            <!-- estado producto -->
             <div class="form-group">
-                <label>Entidad patrocinadora</label>
-                <input type="text" name="entidadpatrocinadora"
-                       value="{{ curso.entidadpatrocinadora }}">
+                <label>Estado del producto</label>
+                <select name="estadoproducto" required>
+                    <option value="">Seleccione</option>
+                    <option value="Bueno">Bueno</option>
+                    <option value="Regular">Regular</option>
+                </select>
             </div>
 
-            <!-- fechas -->
+            <!-- valor -->
             <div class="form-group">
-                <label>Fecha inicio</label>
-                <input type="date" name="fechainicio"
-                       value="{{ curso.fechainicio|date:'Y-m-d' }}">
-            </div>
-
-            <div class="form-group">
-                <label>Fecha fin</label>
-                <input type="date" name="fechafin"
-                       value="{{ curso.fechafin|date:'Y-m-d' }}">
-            </div>
-
-            <!-- horas -->
-            <div class="form-group">
-                <label>Total de horas</label>
-                <input type="number" name="totalhoras"
-                       value="{{ curso.totalhoras }}">
+                <label>Valor del bien</label>
+                <input type="number" name="valordelbien" step="0.01">
             </div>
 
             <!-- descripción -->
             <div class="form-group">
                 <label>Descripción</label>
-                <textarea name="descripcion" rows="4">{{ curso.descripcion }}</textarea>
+                <textarea name="descripcion" rows="4"></textarea>
             </div>
 
-            <!-- certificado -->
+            <!-- imagen -->
             <div class="form-group">
-                <label>Certificado (archivo)</label>
-                {% if curso.archivo_certificado %}
-                    <p><a href="{{ curso.archivo_certificado.url }}" target="_blank">Descargar archivo actual</a></p>
-                {% endif %}
-                <input type="file" name="archivo_certificado" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                <label>Imagen del producto</label>
+                <input type="file" name="imagen" accept="image/*">
+            </div>
+
+            <!-- fecha publicación -->
+            <div class="form-group">
+                <label>Fecha de publicación</label>
+                <input type="date" name="fechapublicacion">
             </div>
 
             <!-- visible en front -->
             <div class="form-group">
                 <label>
-                    <input type="checkbox" name="activarparaqueseveaenfront"
-                           {% if curso.activarparaqueseveaenfront %}checked{% endif %}>
-                    Mostrar en la hoja de vida
+                    <input type="checkbox" name="activarparaqueseveaenfront" checked>
+                    Mostrar en el front
                 </label>
             </div>
 
             <button type="submit" class="btn btn-primary">
-                Actualizar Curso
+                Guardar Venta
             </button>
         </form>
     </div>
