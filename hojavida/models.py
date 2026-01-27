@@ -10,7 +10,7 @@ class DATOSPERSONALES(models.Model):
     nombres = models.CharField(max_length=60)
     nacionalidad = models.CharField(max_length=20, blank=True)
     lugarnacimiento = models.CharField(max_length=60, blank=True)
-    fechanacimiento = models.DateField(null=True, blank=True, editable=False)
+    fechanacimiento = models.DateField(null=True, blank=True)
     numerocedula = models.CharField(max_length=10, unique=True)
     sexo = models.CharField(max_length=1, choices=[('H','Hombre'),('M','Mujer')])
     estadocivil = models.CharField(max_length=50, blank=True)
