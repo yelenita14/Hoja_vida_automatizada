@@ -3,7 +3,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Hoja de Vida Profesional</title>
+    <title>Hoja de Vida Profesional - {{ datos.nombres }} {{ datos.apellidos }}</title>
     <style>
         * {
             margin: 0;
@@ -12,80 +12,124 @@
         }
         
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #2c3e50;
-            padding: 20px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: white;
+            color: #4a4a4a;
             line-height: 1.6;
+            padding: 0;
         }
         
         .cv-container {
             max-width: 900px;
             margin: 0 auto;
-            background-color: #f5f5f5;
+            background: white;
         }
         
+        /* HEADER */
+        .pdf-header {
+            background: linear-gradient(135deg, #5a4a9f 0%, #b8a5d4 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            border-bottom: 5px solid #a8d5f5;
+        }
+        
+        .pdf-header .foto-perfil {
+            width: 140px;
+            height: 140px;
+            border-radius: 70px;
+            border: 4px solid white;
+            margin: 0 auto 20px;
+            display: block;
+            object-fit: cover;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .pdf-header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .pdf-header .profesion {
+            font-size: 16px;
+            opacity: 0.95;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        
+        .pdf-header .contacto {
+            font-size: 12px;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+        
+        /* CARDS */
         .card {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
+            background: white;
+            padding: 25px;
             margin-bottom: 20px;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 5px solid #b8a5d4;
+            page-break-inside: avoid;
+            border-bottom: 1px solid #e8d5f5;
+        }
+        
+        .card h2 {
+            font-size: 18px;
+            color: #5a4a9f;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #a8d5f5;
+            font-weight: 700;
         }
         
         .card h3 {
-            color: #2c3e50;
-            font-size: 18px;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #3498db;
-            font-weight: bold;
+            font-size: 14px;
+            color: #5a4a9f;
+            margin-bottom: 4px;
+            margin-top: 15px;
+            font-weight: 700;
         }
         
-        .perfil {
-            text-align: center;
-        }
-        
-        .perfil h2 {
-            color: #2c3e50;
-            font-size: 24px;
-            margin: 15px 0 20px 0;
-            font-weight: bold;
-        }
-        
-        .foto-perfil {
-            width: 130px;
-            height: 130px;
-            border-radius: 65px;
-            border: 4px solid #3498db;
-            margin: 0 auto 15px;
-            display: block;
-        }
-        
-        .info-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            text-align: center;
-            display: inline-block;
-        }
-        
-        .info-list li {
+        .card h4 {
             font-size: 13px;
+            color: #8b7ba8;
             margin-bottom: 8px;
-            line-height: 1.5;
+            font-weight: 600;
         }
         
-        .info-list strong {
-            font-weight: bold;
-            color: #2c3e50;
+        /* DATOS PERSONALES */
+        .perfil {
+            background: linear-gradient(135deg, #f8f4ff 0%, #fff8f0 100%);
+            border-left: 5px solid #a8d5f5;
         }
         
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .info-item {
+            font-size: 11px;
+        }
+        
+        .info-item strong {
+            color: #5a4a9f;
+            font-weight: 700;
+        }
+        
+        .info-item span {
+            color: #6b5b8f;
+        }
+        
+        /* ITEMS EN CARDS */
         .item {
-            margin-bottom: 15px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 18px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0e6ff;
+            page-break-inside: avoid;
         }
         
         .item:last-child {
@@ -94,76 +138,127 @@
             padding-bottom: 0;
         }
         
-        .item h4 {
-            color: #2c3e50;
-            font-size: 15px;
-            margin: 0 0 5px 0;
-            font-weight: bold;
+        .item-title {
+            font-size: 13px;
+            color: #5a4a9f;
+            font-weight: 700;
+            margin-bottom: 4px;
         }
         
-        .item span {
-            font-size: 12px;
-            color: #777;
-            display: block;
+        .item-subtitle {
+            font-size: 11px;
+            color: #8b7ba8;
             margin-bottom: 8px;
         }
         
-        .item p {
-            font-size: 13px;
-            color: #555;
-            margin: 8px 0;
+        .date-badge {
+            display: inline-block;
+            background: #a8d5f5;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .item-description {
+            font-size: 11px;
+            color: #6b5b8f;
             line-height: 1.5;
+            margin-top: 8px;
         }
         
-        .item strong {
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        
-        .item a {
-            font-size: 12px;
-            color: #3498db;
-            text-decoration: underline;
-        }
-        
-        /* Estilos para certificados en página aparte */
+        /* CERTIFICADOS */
         .certificado-page {
             page-break-before: always;
-            width: 100%;
-            padding: 40px;
-            background-color: white;
+            text-align: center;
+            padding: 30px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
             min-height: 100vh;
-        }
-        
-        .certificado-container {
-            text-align: center;
-            width: 100%;
-        }
-        
-        .certificado-imagen {
-            width: 100%;
-            max-width: 900px;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-            margin: 0 auto;
+            background: white;
         }
         
         .certificado-titulo {
-            font-size: 20px;
-            color: #2c3e50;
-            margin-top: 20px;
-            font-weight: bold;
+            font-size: 18px;
+            color: #5a4a9f;
+            margin-top: 15px;
+            font-weight: 700;
         }
         
-        .certificado-entidad {
+        .certificado-imagen {
+            width: 95%;
+            max-width: 900px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* PRODUCTOS GARAGE */
+        .venta-item {
+            background: #f8f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            page-break-inside: avoid;
+            border-left: 4px solid #d4c5e8;
+        }
+        
+        .venta-titulo {
+            font-size: 13px;
+            color: #5a4a9f;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .venta-precio {
             font-size: 14px;
-            color: #777;
+            color: #b8a5d4;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+        
+        .venta-estado {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin: 8px 0;
+        }
+        
+        .estado-bueno {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .estado-regular {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .estado-malo {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .venta-descripcion {
+            font-size: 11px;
+            color: #6b5b8f;
+            line-height: 1.5;
             margin-top: 8px;
+        }
+        
+        /* ESPACIOS */
+        .space {
+            height: 20px;
+        }
+        
+        .page-break {
+            page-break-after: always;
         }
     </style>
 </head>
@@ -171,67 +266,90 @@
 <body>
 
 <div class="cv-container">
-<!-- DATOS PERSONALES -->
-<div class="card perfil">
+
+<!-- ENCABEZADO PDF -->
+<div class="pdf-header">
     {% if foto_base64 %}
-        <img src="data:{{ foto_mime_type }};base64,{{ foto_base64 }}" class="foto-perfil" style="width: 130px; height: 130px;">
+        <img src="data:{{ foto_mime_type }};base64,{{ foto_base64 }}" class="foto-perfil">
     {% else %}
-        <div class="foto-perfil" style="background-color: #ddd; display: flex; align-items: center; justify-content: center; color: #999; width: 130px; height: 130px;">
+        <div style="width: 140px; height: 140px; border-radius: 70px; border: 4px solid white; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.2); color: white; font-weight: 600;">
             Sin foto
         </div>
     {% endif %}
-
-    <h2>{{ datos.nombres }} {{ datos.apellidos }}</h2>
-
-    <ul class="info-list">
-        {% if datos.numerocedula %}
-            <li><strong>Cédula:</strong> {{ datos.numerocedula }}</li>
-        {% endif %}
-        {% if datos.nacionalidad %}
-            <li><strong>Nacionalidad:</strong> {{ datos.nacionalidad }}</li>
-        {% endif %}
-        {% if datos.lugarnacimiento %}
-            <li><strong>Lugar de nacimiento:</strong> {{ datos.lugarnacimiento }}</li>
-        {% endif %}
-        {% if datos.fechanacimiento %}
-            <li><strong>Fecha de nacimiento:</strong> {{ datos.fechanacimiento|date:"d/m/Y" }}</li>
-        {% endif %}
-        {% if datos.sexo %}
-            <li><strong>Sexo:</strong> {{ datos.get_sexo_display }}</li>
-        {% endif %}
-        {% if datos.estadocivil %}
-            <li><strong>Estado civil:</strong> {{ datos.estadocivil }}</li>
-        {% endif %}
-        {% if datos.licenciaconducir %}
-            <li><strong>Licencia de conducir:</strong> {{ datos.licenciaconducir }}</li>
-        {% endif %}
-        {% if datos.telefonoconvencional %}
-            <li><strong>Teléfono convencional:</strong> {{ datos.telefonoconvencional }}</li>
-        {% endif %}
-        {% if datos.telefonofijo %}
-            <li><strong>Teléfono fijo:</strong> {{ datos.telefonofijo }}</li>
-        {% endif %}
-        {% if datos.direcciontrabajo %}
-            <li><strong>Dirección de trabajo:</strong> {{ datos.direcciontrabajo }}</li>
-        {% endif %}
-        {% if datos.direcciondomiciliaria %}
-            <li><strong>Dirección domiciliaria:</strong> {{ datos.direcciondomiciliaria }}</li>
+    
+    <h1>{{ datos.nombres }} {{ datos.apellidos }}</h1>
+    
+    {% if datos.descripcionperfil %}
+        <p class="profesion">{{ datos.descripcionperfil }}</p>
+    {% endif %}
+    
+    <div class="contacto">
+        {% if datos.telefonoconvencional or datos.telefonofijo %}
+            📞 {% if datos.telefonoconvencional %}{{ datos.telefonoconvencional }}{% endif %} {% if datos.telefonofijo %}/ {{ datos.telefonofijo }}{% endif %}<br>
         {% endif %}
         {% if datos.sitioweb %}
-            <li><strong>Sitio web:</strong> {{ datos.sitioweb }}</li>
+            🌐 {{ datos.sitioweb }}<br>
         {% endif %}
-    </ul>
+        {% if datos.direcciondomiciliaria %}
+            📍 {{ datos.direcciondomiciliaria }}
+        {% endif %}
+    </div>
+</div>
+
+<!-- DATOS PERSONALES -->
+<div class="card perfil">
+    <h2>Información Personal</h2>
+    
+    <div class="info-grid">
+        {% if datos.numerocedula %}
+            <div class="info-item">
+                <strong>Cédula:</strong> <span>{{ datos.numerocedula }}</span>
+            </div>
+        {% endif %}
+        {% if datos.nacionalidad %}
+            <div class="info-item">
+                <strong>Nacionalidad:</strong> <span>{{ datos.nacionalidad }}</span>
+            </div>
+        {% endif %}
+        {% if datos.lugarnacimiento %}
+            <div class="info-item">
+                <strong>Lugar Nacimiento:</strong> <span>{{ datos.lugarnacimiento }}</span>
+            </div>
+        {% endif %}
+        {% if datos.fechanacimiento %}
+            <div class="info-item">
+                <strong>Fecha Nacimiento:</strong> <span>{{ datos.fechanacimiento|date:"d \d\e F \d\e Y" }}</span>
+            </div>
+        {% endif %}
+        {% if datos.sexo %}
+            <div class="info-item">
+                <strong>Sexo:</strong> <span>{% if datos.sexo == 'M' %}Mujer{% else %}Hombre{% endif %}</span>
+            </div>
+        {% endif %}
+        {% if datos.estadocivil %}
+            <div class="info-item">
+                <strong>Estado Civil:</strong> <span>{{ datos.estadocivil }}</span>
+            </div>
+        {% endif %}
+    </div>
 </div>
 
 <!-- EXPERIENCIA LABORAL -->
 {% if experiencias and datos.mostrar_experiencia %}
 <div class="card">
-    <h3>Experiencia Laboral</h3>
+    <h2>Experiencia Laboral</h2>
     {% for e in experiencias %}
         <div class="item">
-            <h4>{{ e.cargo }}</h4>
-            <span>{{ e.empresa }} | {{ e.fechainicio }} - {{ e.fechafin|default:"Actual" }}</span>
-            <p>{{ e.descripcion }}</p>
+            <div class="item-title">
+                {{ e.cargo }}
+                <span class="date-badge">
+                    {{ e.fechainicio|date:"m/Y" }} - {% if e.fechafin %}{{ e.fechafin|date:"m/Y" }}{% else %}Actual{% endif %}
+                </span>
+            </div>
+            <div class="item-subtitle">{{ e.empresa }}</div>
+            {% if e.descripcion %}
+                <p class="item-description">{{ e.descripcion }}</p>
+            {% endif %}
         </div>
     {% endfor %}
 </div>
@@ -240,16 +358,19 @@
 <!-- CURSOS -->
 {% if cursos and datos.mostrar_cursos %}
 <div class="card">
-    <h3>Capacitaciones</h3>
+    <h2>Capacitaciones y Cursos</h2>
     {% for c in cursos %}
         <div class="item">
-            <strong>{{ c.nombrecurso }}</strong> – {{ c.entidadpatrocinadora }}
+            <div class="item-title">{{ c.curso }}</div>
+            <div class="item-subtitle">{{ c.institucion }}</div>
             {% if c.fechainicio %}
-                <br><small>{{ c.fechainicio|date:"d/m/Y" }}
-                {% if c.fechafin %}- {{ c.fechafin|date:"d/m/Y" }}{% endif %}</small>
+                <div class="item-subtitle">
+                    {{ c.fechainicio|date:"d/m/Y" }}
+                    {% if c.fechafin %}- {{ c.fechafin|date:"d/m/Y" }}{% endif %}
+                </div>
             {% endif %}
             {% if c.descripcion %}
-                <p>{{ c.descripcion }}</p>
+                <p class="item-description">{{ c.descripcion }}</p>
             {% endif %}
         </div>
     {% endfor %}
@@ -259,15 +380,15 @@
 <!-- RECONOCIMIENTOS -->
 {% if reconocimientos and datos.mostrar_reconocimientos %}
 <div class="card">
-    <h3>Reconocimientos</h3>
+    <h2>Reconocimientos y Distinciones</h2>
     {% for r in reconocimientos %}
         <div class="item">
-            <strong>{{ r.tiporeconocimiento }}</strong> – {{ r.entidadpatrocinadora }}
-            {% if r.fechareconocimiento %}
-                <br><small>{{ r.fechareconocimiento|date:"d/m/Y" }}</small>
+            <div class="item-title">{{ r.nombrepremio }}</div>
+            {% if r.fecha %}
+                <div class="item-subtitle">📅 {{ r.fecha|date:"d \d\e F \d\e Y" }}</div>
             {% endif %}
-            {% if r.descripcionreconocimiento %}
-                <p>{{ r.descripcionreconocimiento }}</p>
+            {% if r.descripcion %}
+                <p class="item-description">{{ r.descripcion }}</p>
             {% endif %}
         </div>
     {% endfor %}
@@ -277,17 +398,16 @@
 <!-- PRODUCTOS ACADÉMICOS -->
 {% if productos_academicos and datos.mostrar_productos_academicos %}
 <div class="card">
-    <h3>Productos Académicos</h3>
+    <h2>Productos Académicos</h2>
     {% for p in productos_academicos %}
         <div class="item">
-            <strong>{{ p.nombreproducto }}</strong> – {{ p.tiposproducto }}
-            {% if p.fechapublicacion %}
-                <br><small>Publicado: {{ p.fechapublicacion|date:"d/m/Y" }}</small>
+            <div class="item-title">{{ p.nombre }}</div>
+            {% if p.url %}
+                <div class="item-subtitle">🔗 <a href="{{ p.url }}" style="color: #b8a5d4; text-decoration: underline;">Ver publicación</a></div>
             {% endif %}
             {% if p.descripcion %}
-                <p>{{ p.descripcion }}</p>
+                <p class="item-description">{{ p.descripcion }}</p>
             {% endif %}
-
         </div>
     {% endfor %}
 </div>
@@ -296,12 +416,18 @@
 <!-- PRODUCTOS LABORALES -->
 {% if productos_laborales and datos.mostrar_productos_laborales %}
 <div class="card">
-    <h3>Productos Laborales</h3>
+    <h2>Productos Laborales</h2>
     {% for pl in productos_laborales %}
         <div class="item">
-            <strong>{{ pl.nombreproducto }}</strong>
+            <div class="item-title">{{ pl.nombre }}</div>
+            {% if pl.ventas %}
+                <div class="item-subtitle">📊 Ventas: {{ pl.ventas }}</div>
+            {% endif %}
+            {% if pl.url %}
+                <div class="item-subtitle">🔗 <a href="{{ pl.url }}" style="color: #b8a5d4; text-decoration: underline;">Ver producto</a></div>
+            {% endif %}
             {% if pl.descripcion %}
-                <p>{{ pl.descripcion }}</p>
+                <p class="item-description">{{ pl.descripcion }}</p>
             {% endif %}
         </div>
     {% endfor %}
@@ -311,64 +437,22 @@
 <!-- VENTA GARAGE -->
 {% if ventas and datos.mostrar_ventas %}
 <div class="card">
-    <h3>Venta Garage</h3>
+    <h2>Venta Garage</h2>
     {% for v in ventas %}
-        <div class="item">
-            {% if v.imagen %}
-                <img src="data:image/jpeg;base64,{{ v.imagen_base64 }}" alt="{{ v.nombreproducto }}" class="producto-imagen" style="max-width: 80%; margin: 1rem auto; display: block;">
-            {% endif %}
-            <h4 style="text-align: center; margin-top: 1rem;">{{ v.nombreproducto }}</h4>
-            <div style="text-align: center; margin: 1rem 0;">
-                <strong style="font-size: 1.1rem;">Precio:</strong> <span style="font-size: 1.2rem; color: #2c3e50;">${{ v.valordelbien }}</span><br>
-                {% if v.estadoproducto == "Bueno" %}
-                    <span style="display: inline-block; background: #d4edda; color: #155724; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.95rem; font-weight: 600; margin-top: 0.8rem;">✓ {{ v.estadoproducto }}</span>
-                {% elif v.estadoproducto == "Regular" %}
-                    <span style="display: inline-block; background: #fff3cd; color: #856404; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.95rem; font-weight: 600; margin-top: 0.8rem;">⚠ {{ v.estadoproducto }}</span>
-                {% else %}
-                    <span style="display: inline-block; background: #f8d7da; color: #721c24; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.95rem; font-weight: 600; margin-top: 0.8rem;">{{ v.estadoproducto }}</span>
-                {% endif %}
-                {% if v.fechapublicacion %}
-                    <div class="fecha-publicacion" style="margin-top: 0.8rem;">Publicado: {{ v.fechapublicacion|date:"d/m/Y" }}</div>
-                {% endif %}
-            </div>
+        <div class="venta-item">
+            <div class="venta-titulo">{{ v.nombre }}</div>
+            <div class="venta-precio">💰 ${{ v.precio|floatformat:0 }}</div>
+            <span class="venta-estado estado-bueno">Disponible</span>
             {% if v.descripcion %}
-                <p style="text-align: justify;">{{ v.descripcion }}</p>
-            {% endif %}
-            {% if v.archivo %}
-                <a href="{{ v.archivo.url }}" target="_blank">📄 Descargar archivo</a>
+                <p class="venta-descripcion">{{ v.descripcion }}</p>
             {% endif %}
         </div>
     {% endfor %}
 </div>
 {% endif %}
 
-<!-- ANEXOS - CERTIFICADOS -->
-{% if cursos and datos.mostrar_cursos or reconocimientos and datos.mostrar_reconocimientos %}
-    {% if cursos and datos.mostrar_cursos %}
-        {% for c in cursos %}
-            {% if c.certificado_base64 %}
-                {% if c.certificado_mime_type == "image/png" or c.certificado_mime_type == "image/jpeg" %}
-                    <div style="page-break-before: always; padding: 20px; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 100vh; flex-direction: column;">
-                        <h2 style="color: #2c3e50; margin-bottom: 30px; font-size: 24px;">Certificado de Curso</h2>
-                        <img src="data:{{ c.certificado_mime_type }};base64,{{ c.certificado_base64 }}" alt="Certificado {{ c.nombrecurso }}" style="width: 95%; max-width: 100%; height: auto;">
-                    </div>
-                {% endif %}
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-    {% if reconocimientos and datos.mostrar_reconocimientos %}
-        {% for r in reconocimientos %}
-            {% if r.certificado_base64 %}
-                {% if r.certificado_mime_type == "image/png" or r.certificado_mime_type == "image/jpeg" %}
-                    <div style="page-break-before: always; padding: 20px; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 100vh; flex-direction: column;">
-                        <h2 style="color: #2c3e50; margin-bottom: 30px; font-size: 24px;">Certificado de Reconocimiento</h2>
-                        <img src="data:{{ r.certificado_mime_type }};base64,{{ r.certificado_base64 }}" alt="Certificado {{ r.tiporeconocimiento }}" style="width: 95%; max-width: 100%; height: auto;">
-                    </div>
-                {% endif %}
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-{% endif %}
+</div>
 
 </body>
 </html>
+
