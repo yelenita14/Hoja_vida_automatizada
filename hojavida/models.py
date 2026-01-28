@@ -98,9 +98,17 @@ class ExperienciaLaboral(models.Model):
         verbose_name_plural = 'Experiencias Laborales'
     
     def clean(self):
+        # Validar que no sean fechas futuras
+        if self.fechainiciogestion and self.fechainiciogestion > date.today():
+            raise ValidationError({'fechainiciogestion': 'La fecha de inicio no puede ser en el futuro.'})
+        
+        if self.fechafingestion and self.fechafingestion > date.today():
+            raise ValidationError({'fechafingestion': 'La fecha de finalización no puede ser en el futuro.'})
+        
+        # Validar que fin sea posterior a inicio
         if self.fechafingestion and self.fechainiciogestion:
             if self.fechafingestion < self.fechainiciogestion:
-                raise ValidationError('La fecha de finalización no puede ser cronológicamente anterior a la fecha de inicio.')
+                raise ValidationError({'fechafingestion': 'La fecha de finalización no puede ser anterior a la fecha de inicio.'})
     
     def __str__(self):
         return f"{self.cargodesempenado} - {self.nombrempresa}"
@@ -125,6 +133,10 @@ class Reconocimientos(models.Model):
         ordering = ['-fechareconocimiento']
         verbose_name = 'Reconocimiento'
         verbose_name_plural = 'Reconocimientos'
+    
+    def clean(self):
+        if self.fechareconocimiento and self.fechareconocimiento > date.today():
+            raise ValidationError({'fechareconocimiento': 'La fecha no puede ser en el futuro.'})
     
     def __str__(self):
         return f"{self.tiporeconocimiento} - {self.entidadpatrocinadora}"
@@ -162,14 +174,19 @@ class CursosRealizados(models.Model):
 # --- 5. PRODUCTOS ACADÉMICOS ---
 class ProductosAcademicos(models.Model):
     CATEGORIA_CHOICES = [
-        ('Ingeniería', 'Ingeniería'), ('Tecnología', 'Tecnología'),
-        ('Docencia', 'Docencia'), ('Investigación', 'Investigación'), ('Otro', 'Otro')
+        ('Artículo', 'Artículo Académico'),
+        ('Tesis', 'Tesis o Proyecto de Grado'),
+        ('Investigación', 'Investigación'),
+        ('Publicación', 'Publicación'),
+        ('Ponencia', 'Ponencia'),
+        ('Tutorial', 'Tutorial'),
+        ('Otro', 'Otro')
     ]
 
     idproductoacademico = models.AutoField(primary_key=True)
     idperfilconqueestaactivo = models.ForeignKey(DatosPersonales, on_delete=models.CASCADE, related_name='productos_academicos')
     nombrerecurso = models.CharField(max_length=100)
-    clasificador = models.CharField(max_length=100, choices=CATEGORIA_CHOICES)
+    clasificador = models.CharField(max_length=50, choices=CATEGORIA_CHOICES, default='Artículo')
     descripcion = models.TextField(blank=True, null=True)
     archivo = CloudinaryField('raw', folder='productos_academicos/', blank=True, null=True)
     link = models.URLField(max_length=500, blank=True, null=True)
@@ -212,12 +229,14 @@ class VentaGarage(models.Model):
     idventagarage = models.AutoField(primary_key=True)
     idperfilconqueestaactivo = models.ForeignKey(DatosPersonales, on_delete=models.CASCADE, related_name='ventas_garage')
     nombreproducto = models.CharField(max_length=100)
-    estadoproducto = models.CharField(max_length=40, choices=ESTADO_PRODUCTO_CHOICES)
+    estadoproducto = models.CharField(max_length=40, choices=ESTADO_PRODUCTO_CHOICES, default='Bueno')
     descripcion = models.TextField(blank=True, null=True)
     valordelbien = models.DecimalField(max_digits=10, decimal_places=2)
     
-    # Imagen obligatoria para ventas y fecha automática
-    imagen_producto = CloudinaryField('image', folder='ventas_garage/', blank=True, null=True)
+    # Imagen obligatoria para ventas
+    imagen_producto = CloudinaryField('image', folder='ventas_garage/')
+    
+    # Fecha automática de publicación
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
 
     activarparaqueseveaenfront = models.BooleanField(default=True)

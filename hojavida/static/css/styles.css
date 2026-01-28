@@ -169,6 +169,7 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     text-align: center;
     border: 2px solid transparent;
+    cursor: pointer;
 }
 
 .nav-item:hover {
@@ -739,4 +740,27 @@ table tbody tr:hover {
     .cv-main {
         padding: 0;
     }
+}
+
+/* ESTADOS DE PRODUCTOS */
+.estado-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    border: 1px solid;
+}
+
+.estado-bueno {
+    background: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.estado-regular {
+    background: #fff3cd;
+    color: #856404;
+    border-color: #ffeaa7;
 }
