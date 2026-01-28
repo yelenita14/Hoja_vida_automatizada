@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import DATOSPERSONALES, EXPERIENCIALABORAL, CURSOSREALIZADOS, RECONOCIMIENTOS, PRODUCTOSACADEMICOS, PRODUCTOSLABORALES, VENTAS
+from .models import DatosPersonales, ExperienciaLaboral, CursosRealizados, Reconocimientos, ProductosAcademicos, ProductosLaborales, VentaGarage
 
-@admin.register(DATOSPERSONALES)
+@admin.register(DatosPersonales)
 class DatosPersonalesAdmin(admin.ModelAdmin):
     list_display = ('nombres', 'apellidos', 'perfilactivo')
     fieldsets = (
@@ -18,85 +18,115 @@ class DatosPersonalesAdmin(admin.ModelAdmin):
             'fields': ('direcciondomiciliaria', 'direcciontrabajo')
         }),
         ('Foto', {
-            'fields': ('foto',)
+            'fields': ('foto_perfil',)
         }),
-        ('Visibilidad de Secciones', {
-            'fields': ('mostrar_experiencia', 'mostrar_cursos', 'mostrar_reconocimientos', 'mostrar_productos_academicos', 'mostrar_productos_laborales', 'mostrar_ventas')
+        ('Visibilidad en Web', {
+            'fields': ('mostrar_experiencia', 'mostrar_cursos', 'mostrar_reconocimientos', 'mostrar_productos_academicos', 'mostrar_productos_laborales', 'mostrar_venta_garage')
+        }),
+        ('Visibilidad en PDF', {
+            'fields': ('imprimir_experiencia', 'imprimir_reconocimientos', 'imprimir_cursos', 'imprimir_productos_academicos', 'imprimir_productos_laborales', 'imprimir_venta_garage')
         }),
     )
 
-@admin.register(CURSOSREALIZADOS)
+@admin.register(CursosRealizados)
 class CursosRealizadosAdmin(admin.ModelAdmin):
-    list_display = ('curso', 'idperfilconqueestaactivo', 'activarparaqueseveaenfront')
-    list_filter = ('activarparaqueseveaenfront',)
+    list_display = ('nombrecurso', 'idperfilconqueestaactivo', 'activarparaqueseveaenfront')
+    list_filter = ('activarparaqueseveaenfront', 'fechainicio')
     fieldsets = (
         ('Curso', {
-            'fields': ('idperfilconqueestaactivo', 'curso', 'institucion', 'fechainicio', 'fechafin', 'descripcion')
+            'fields': ('idperfilconqueestaactivo', 'nombrecurso', 'entidadpatrocinadora', 'fechainicio', 'fechafin', 'totalhoras', 'descripcioncurso')
+        }),
+        ('Contacto', {
+            'fields': ('nombrecontactoauspicia', 'telefonocontactoauspicia', 'emailempresapatrocinadora')
+        }),
+        ('Certificado', {
+            'fields': ('rutacertificado',)
         }),
         ('Visibilidad', {
             'fields': ('activarparaqueseveaenfront',)
         }),
     )
 
-@admin.register(EXPERIENCIALABORAL)
+@admin.register(ExperienciaLaboral)
 class ExperienciaLaboralAdmin(admin.ModelAdmin):
-    list_display = ('cargo', 'empresa', 'idperfilconqueestaactivo', 'activarparaqueseveaenfront')
-    list_filter = ('activarparaqueseveaenfront',)
+    list_display = ('cargodesempenado', 'nombrempresa', 'idperfilconqueestaactivo', 'activarparaqueseveaenfront')
+    list_filter = ('activarparaqueseveaenfront', 'fechainiciogestion')
     fieldsets = (
         ('Experiencia', {
-            'fields': ('idperfilconqueestaactivo', 'empresa', 'cargo', 'fechainicio', 'fechafin', 'descripcion')
+            'fields': ('idperfilconqueestaactivo', 'cargodesempenado', 'nombrempresa', 'lugarempresa', 'fechainiciogestion', 'fechafingestion', 'descripcionfunciones')
+        }),
+        ('Contacto Empresarial', {
+            'fields': ('nombrecontactoempresarial', 'telefonocontactoempresarial', 'emailempresa', 'sitiowebempresa')
+        }),
+        ('Certificado', {
+            'fields': ('rutacertificado',)
         }),
         ('Visibilidad', {
             'fields': ('activarparaqueseveaenfront',)
         }),
     )
 
-@admin.register(RECONOCIMIENTOS)
+@admin.register(Reconocimientos)
 class ReconocimientosAdmin(admin.ModelAdmin):
-    list_display = ('nombrepremio', 'idperfilconqueestaactivo', 'activarparaqueseveaenfront')
-    list_filter = ('activarparaqueseveaenfront',)
+    list_display = ('tiporeconocimiento', 'idperfilconqueestaactivo', 'activarparaqueseveaenfront')
+    list_filter = ('activarparaqueseveaenfront', 'fechareconocimiento')
     fieldsets = (
         ('Reconocimiento', {
-            'fields': ('idperfilconqueestaactivo', 'nombrepremio', 'descripcion', 'fecha')
+            'fields': ('idperfilconqueestaactivo', 'tiporeconocimiento', 'entidadpatrocinadora', 'fechareconocimiento', 'descripcionreconocimiento')
+        }),
+        ('Contacto', {
+            'fields': ('nombrecontactoauspicia', 'telefonocontactoauspicia')
+        }),
+        ('Certificado', {
+            'fields': ('rutacertificado',)
         }),
         ('Visibilidad', {
             'fields': ('activarparaqueseveaenfront',)
         }),
     )
 
-@admin.register(PRODUCTOSACADEMICOS)
+@admin.register(ProductosAcademicos)
 class ProductosAcademicosAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'idperfilconqueestaactivo', 'activarparaqueseveaenfront')
-    list_filter = ('activarparaqueseveaenfront',)
+    list_display = ('nombrerecurso', 'idperfilconqueestaactivo', 'activarparaqueseveaenfront')
+    list_filter = ('activarparaqueseveaenfront', 'clasificador')
     fieldsets = (
         ('Producto', {
-            'fields': ('idperfilconqueestaactivo', 'nombre', 'descripcion', 'url')
+            'fields': ('idperfilconqueestaactivo', 'nombrerecurso', 'clasificador', 'descripcion')
+        }),
+        ('Recursos', {
+            'fields': ('archivo', 'link')
         }),
         ('Visibilidad', {
             'fields': ('activarparaqueseveaenfront',)
         }),
     )
 
-@admin.register(PRODUCTOSLABORALES)
+@admin.register(ProductosLaborales)
 class ProductosLaboralesAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'idperfilconqueestaactivo', 'activarparaqueseveaenfront')
-    list_filter = ('activarparaqueseveaenfront',)
+    list_display = ('nombreproducto', 'idperfilconqueestaactivo', 'activarparaqueseveaenfront')
+    list_filter = ('activarparaqueseveaenfront', 'fechaproducto')
     fieldsets = (
         ('Producto', {
-            'fields': ('idperfilconqueestaactivo', 'nombre', 'descripcion', 'url', 'ventas')
+            'fields': ('idperfilconqueestaactivo', 'nombreproducto', 'fechaproducto', 'descripcion')
+        }),
+        ('Recursos', {
+            'fields': ('archivo', 'link')
         }),
         ('Visibilidad', {
             'fields': ('activarparaqueseveaenfront',)
         }),
     )
 
-@admin.register(VENTAS)
-class VentasAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'idperfilconqueestaactivo', 'activarparaqueseveaenfront')
-    list_filter = ('activarparaqueseveaenfront',)
+@admin.register(VentaGarage)
+class VentaGarageAdmin(admin.ModelAdmin):
+    list_display = ('nombreproducto', 'idperfilconqueestaactivo', 'valordelbien', 'activarparaqueseveaenfront')
+    list_filter = ('activarparaqueseveaenfront', 'estadoproducto', 'fecha_publicacion')
     fieldsets = (
-        ('Venta', {
-            'fields': ('idperfilconqueestaactivo', 'nombre', 'descripcion', 'url', 'precio')
+        ('Producto', {
+            'fields': ('idperfilconqueestaactivo', 'nombreproducto', 'estadoproducto', 'valordelbien', 'descripcion')
+        }),
+        ('Multimedia', {
+            'fields': ('imagen_producto',)
         }),
         ('Visibilidad', {
             'fields': ('activarparaqueseveaenfront',)
