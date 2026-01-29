@@ -12,16 +12,16 @@ from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse
 from datetime import datetime
 from django.contrib import messages
-from .models import DATOSPERSONALES, EXPERIENCIALABORAL, CURSOSREALIZADOS, RECONOCIMIENTOS, PRODUCTOSACADEMICOS, PRODUCTOSLABORALES, VENTAS
+from .models import DatosPersonales, ExperienciaLaboral, CursosRealizados, Reconocimientos, ProductosAcademicos, ProductosLaborales, VentaGarage
 
 # Vista para mostrar la hoja de vida sin iniciar sesión
 def mi_hoja_vida(request):
     # Primero intenta buscar un perfil activo
-    datos = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
+    datos = DatosPersonales.objects.filter(perfilactivo=1).first()
     
     # Si no hay perfil activo, busca el último perfil creado
     if not datos:
-        datos = DATOSPERSONALES.objects.order_by('-idperfil').first()
+        datos = DatosPersonales.objects.order_by('-idperfil').first()
     
     # Si definitivamente no hay ningún perfil en la base de datos
     if not datos:
@@ -29,32 +29,32 @@ def mi_hoja_vida(request):
             'mensaje': 'No hay datos de perfil. Por favor, crea uno primero.'
         })
 
-    experiencias = EXPERIENCIALABORAL.objects.filter(
+    experiencias = ExperienciaLaboral.objects.filter(
         idperfilconqueestaactivo=datos.idperfil,
         activarparaqueseveaenfront=1
     )
 
-    cursos = CURSOSREALIZADOS.objects.filter(
+    cursos = CursosRealizados.objects.filter(
         idperfilconqueestaactivo=datos.idperfil,
         activarparaqueseveaenfront=1
     )
 
-    reconocimientos = RECONOCIMIENTOS.objects.filter(
+    reconocimientos = Reconocimientos.objects.filter(
         idperfilconqueestaactivo=datos.idperfil,
         activarparaqueseveaenfront=1
     )
 
-    productos_academicos = PRODUCTOSACADEMICOS.objects.filter(
+    productos_academicos = ProductosAcademicos.objects.filter(
         idperfilconqueestaactivo=datos.idperfil,
         activarparaqueseveaenfront=1
     )
 
-    productos_laborales = PRODUCTOSLABORALES.objects.filter(
+    productos_laborales = ProductosLaborales.objects.filter(
         idperfilconqueestaactivo=datos.idperfil,
         activarparaqueseveaenfront=1
     )
 
-    ventas = VENTAS.objects.filter(
+    ventas = VentaGarage.objects.filter(
         idperfilconqueestaactivo=datos.idperfil,
         activarparaqueseveaenfront=1
     )
@@ -97,14 +97,14 @@ def logout_view(request):
 # Vista para el panel de administración, solo accesible para el admin
 @login_required
 def panel_admin(request):
-    perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
     
-    experiencias = EXPERIENCIALABORAL.objects.filter(idperfilconqueestaactivo=perfil).order_by('-idexperiencia') if perfil else []
-    cursos = CURSOSREALIZADOS.objects.filter(idperfilconqueestaactivo=perfil).order_by('-idcurso') if perfil else []
-    reconocimientos = RECONOCIMIENTOS.objects.filter(idperfilconqueestaactivo=perfil).order_by('-idreconocimiento') if perfil else []
-    productos_academicos = PRODUCTOSACADEMICOS.objects.filter(idperfilconqueestaactivo=perfil).order_by('-idproducto') if perfil else []
-    productos_laborales = PRODUCTOSLABORALES.objects.filter(idperfilconqueestaactivo=perfil).order_by('-idproducto') if perfil else []
-    ventas = VENTAS.objects.filter(idperfilconqueestaactivo=perfil).order_by('-idventa') if perfil else []
+    experiencias = ExperienciaLaboral.objects.filter(idperfilconqueestaactivo=perfil).order_by('-idexperiencia') if perfil else []
+    cursos = CursosRealizados.objects.filter(idperfilconqueestaactivo=perfil).order_by('-idcurso') if perfil else []
+    reconocimientos = Reconocimientos.objects.filter(idperfilconqueestaactivo=perfil).order_by('-idreconocimiento') if perfil else []
+    productos_academicos = ProductosAcademicos.objects.filter(idperfilconqueestaactivo=perfil).order_by('-idproducto') if perfil else []
+    productos_laborales = ProductosLaborales.objects.filter(idperfilconqueestaactivo=perfil).order_by('-idproducto') if perfil else []
+    ventas = VentaGarage.objects.filter(idperfilconqueestaactivo=perfil).order_by('-idventa') if perfil else []
     
     return render(request, 'hojavida/panel_admin.html', {
         'experiencias': experiencias,
@@ -134,7 +134,7 @@ def agregar_datos(request):
         if error:
             return render(request, 'hojavida/agregar_datos.html', {'error': error})
         
-        nuevo_perfil = DATOSPERSONALES(
+        nuevo_perfil = DatosPersonales(
             nombres=request.POST.get('nombres', ''),
             apellidos=request.POST.get('apellidos', ''),
             nacionalidad=request.POST.get('nacionalidad', ''),
@@ -148,10 +148,10 @@ def agregar_datos(request):
             direcciondomiciliaria=request.POST.get('direcciondomiciliaria', ''),
             mostrar_experiencia=1 if request.POST.get('mostrar_experiencia') else 0,
             mostrar_cursos=1 if request.POST.get('mostrar_cursos') else 0,
-            mostrar_reconocimientos=1 if request.POST.get('mostrar_reconocimientos') else 0,
+            mostrar_Reconocimientos=1 if request.POST.get('mostrar_Reconocimientos') else 0,
             mostrar_productos_academicos=1 if request.POST.get('mostrar_productos_academicos') else 0,
             mostrar_productos_laborales=1 if request.POST.get('mostrar_productos_laborales') else 0,
-            mostrar_ventas=1 if request.POST.get('mostrar_ventas') else 0,
+            mostrar_VentaGarage=1 if request.POST.get('mostrar_VentaGarage') else 0,
             perfilactivo=1
         )
         if 'foto' in request.FILES:
@@ -167,7 +167,7 @@ def agregar_experiencia(request):
         from django.utils import timezone
         from datetime import datetime
         
-        perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
+        perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
         if perfil:
             # Validar fechas
             fechainicio_str = request.POST.get('fechainicio')
@@ -191,7 +191,7 @@ def agregar_experiencia(request):
             if error:
                 return render(request, 'hojavida/agregar_experiencia.html', {'error': error})
             
-            EXPERIENCIALABORAL.objects.create(
+            ExperienciaLaboral.objects.create(
                 idperfilconqueestaactivo=perfil,
                 empresa=request.POST.get('empresa', ''),
                 cargo=request.POST.get('cargo', ''),
@@ -207,9 +207,9 @@ def agregar_experiencia(request):
 @login_required
 def agregar_curso(request):
     if request.method == 'POST':
-        perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
+        perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
         if perfil:
-            curso = CURSOSREALIZADOS(
+            curso = CursosRealizados(
                 idperfilconqueestaactivo=perfil,
                 nombrecurso=request.POST.get('nombrecurso', ''),
                 entidadpatrocinadora=request.POST.get('entidadpatrocinadora', ''),
@@ -228,30 +228,9 @@ def agregar_curso(request):
 @login_required
 def agregar_producto_academico(request):
     if request.method == 'POST':
-        perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
+        perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
         if perfil:
-            producto = PRODUCTOSACADEMICOS(
-                idperfilconqueestaactivo=perfil,
-                nombreproducto=request.POST.get('nombreproducto', ''),
-                tiposproducto=request.POST.get('tiposproducto', ''),
-                fechapublicacion=request.POST.get('fechapublicacion') or None,
-                descripcion=request.POST.get('descripcion', ''),
-                enlace=request.POST.get('enlace', ''),
-                activarparaqueseveaenfront=1 if request.POST.get('activarparaqueseveaenfront') else 0
-            )
-            if 'archivo' in request.FILES:
-                producto.archivo = request.FILES['archivo']
-            producto.save()
-        return redirect('panel_admin')
-    
-    return render(request, 'hojavida/agregar_producto_academico.html')
-
-@login_required
-def agregar_producto_academico(request):
-    if request.method == 'POST':
-        perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
-        if perfil:
-            producto = PRODUCTOSACADEMICOS(
+            producto = ProductosAcademicos(
                 idperfilconqueestaactivo=perfil,
                 nombreproducto=request.POST.get('nombreproducto', ''),
                 tiposproducto=request.POST.get('tiposproducto', ''),
@@ -270,9 +249,9 @@ def agregar_producto_academico(request):
 @login_required
 def agregar_reconocimiento(request):
     if request.method == 'POST':
-        perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
+        perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
         if perfil:
-            reconocimiento = RECONOCIMIENTOS(
+            reconocimiento = Reconocimientos(
                 idperfilconqueestaactivo=perfil,
                 tiporeconocimiento=request.POST.get('tiporeconocimiento', ''),
                 entidadpatrocinadora=request.POST.get('entidadpatrocinadora', ''),
@@ -292,7 +271,7 @@ def agregar_reconocimiento(request):
 # Vistas para Editar
 @login_required
 def editar_datos(request):
-    datos = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
+    datos = DatosPersonales.objects.filter(perfilactivo=1).first()
     
     if request.method == 'POST':
         from django.utils import timezone
@@ -331,10 +310,10 @@ def editar_datos(request):
             datos.sitioweb = request.POST.get('sitioweb', datos.sitioweb)
             datos.mostrar_experiencia = 1 if request.POST.get('mostrar_experiencia') else 0
             datos.mostrar_cursos = 1 if request.POST.get('mostrar_cursos') else 0
-            datos.mostrar_reconocimientos = 1 if request.POST.get('mostrar_reconocimientos') else 0
+            datos.mostrar_Reconocimientos = 1 if request.POST.get('mostrar_Reconocimientos') else 0
             datos.mostrar_productos_academicos = 1 if request.POST.get('mostrar_productos_academicos') else 0
             datos.mostrar_productos_laborales = 1 if request.POST.get('mostrar_productos_laborales') else 0
-            datos.mostrar_ventas = 1 if request.POST.get('mostrar_ventas') else 0
+            datos.mostrar_VentaGarage = 1 if request.POST.get('mostrar_VentaGarage') else 0
             
             if 'foto' in request.FILES:
                 datos.foto = request.FILES['foto']
@@ -347,8 +326,8 @@ def editar_datos(request):
 
 @login_required
 def editar_experiencia(request, experiencia_id):
-    perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
-    experiencia = EXPERIENCIALABORAL.objects.filter(idexperiencia=experiencia_id, idperfilconqueestaactivo=perfil).first() if perfil else None
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
+    experiencia = ExperienciaLaboral.objects.filter(idexperiencia=experiencia_id, idperfilconqueestaactivo=perfil).first() if perfil else None
     
     if not experiencia:
         return redirect('panel_admin')
@@ -392,8 +371,8 @@ def editar_experiencia(request, experiencia_id):
 
 @login_required
 def editar_curso(request, curso_id):
-    perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
-    curso = CURSOSREALIZADOS.objects.filter(idcurso=curso_id, idperfilconqueestaactivo=perfil).first() if perfil else None
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
+    curso = CursosRealizados.objects.filter(idcurso=curso_id, idperfilconqueestaactivo=perfil).first() if perfil else None
     
     if not curso:
         return redirect('panel_admin')
@@ -414,8 +393,8 @@ def editar_curso(request, curso_id):
 
 @login_required
 def editar_producto_academico(request, producto_id):
-    perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
-    producto = PRODUCTOSACADEMICOS.objects.filter(idproducto=producto_id, idperfilconqueestaactivo=perfil).first() if perfil else None
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
+    producto = ProductosAcademicos.objects.filter(idproducto=producto_id, idperfilconqueestaactivo=perfil).first() if perfil else None
     
     if not producto:
         return redirect('panel_admin')
@@ -436,8 +415,8 @@ def editar_producto_academico(request, producto_id):
 
 @login_required
 def editar_reconocimiento(request, reconocimiento_id):
-    perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
-    reconocimiento = RECONOCIMIENTOS.objects.filter(idreconocimiento=reconocimiento_id, idperfilconqueestaactivo=perfil).first() if perfil else None
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
+    reconocimiento = Reconocimientos.objects.filter(idreconocimiento=reconocimiento_id, idperfilconqueestaactivo=perfil).first() if perfil else None
     
     if not reconocimiento:
         return redirect('panel_admin')
@@ -459,13 +438,13 @@ def editar_reconocimiento(request, reconocimiento_id):
 
 @login_required
 def agregar_producto_laboral(request):
-    perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
     
     if not perfil:
         return redirect('agregar_datos')
     
     if request.method == 'POST':
-        PRODUCTOSLABORALES.objects.create(
+        ProductosLaborales.objects.create(
             idperfilconqueestaactivo=perfil,
             nombreproducto=request.POST.get('nombreproducto'),
             descripcion=request.POST.get('descripcion', ''),
@@ -479,13 +458,13 @@ def agregar_producto_laboral(request):
 
 @login_required
 def agregar_venta(request):
-    perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
     
     if not perfil:
         return redirect('agregar_datos')
     
     if request.method == 'POST':
-        venta = VENTAS(
+        venta = VentaGarage(
             idperfilconqueestaactivo=perfil,
             nombreproducto=request.POST.get('nombreproducto'),
             descripcion=request.POST.get('descripcion', ''),
@@ -505,8 +484,8 @@ def agregar_venta(request):
 
 @login_required
 def editar_producto_laboral(request, producto_id):
-    perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
-    producto = PRODUCTOSLABORALES.objects.filter(idproducto=producto_id, idperfilconqueestaactivo=perfil).first() if perfil else None
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
+    producto = ProductosLaborales.objects.filter(idproducto=producto_id, idperfilconqueestaactivo=perfil).first() if perfil else None
     
     if not producto:
         return redirect('panel_admin')
@@ -525,8 +504,8 @@ def editar_producto_laboral(request, producto_id):
 
 @login_required
 def editar_venta(request, venta_id):
-    perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
-    venta = VENTAS.objects.filter(idventa=venta_id, idperfilconqueestaactivo=perfil).first() if perfil else None
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
+    venta = VentaGarage.objects.filter(idventa=venta_id, idperfilconqueestaactivo=perfil).first() if perfil else None
     
     if not venta:
         return redirect('panel_admin')
@@ -550,32 +529,32 @@ def editar_venta(request, venta_id):
 # Vista para descargar el PDF de la hoja de vida 
 def descargar_cv_pdf(request):
     # Obtener datos
-    datos = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
+    datos = DatosPersonales.objects.filter(perfilactivo=1).first()
     
     if not datos:
         return HttpResponse("No hay datos para descargar", status=400)
     
-    experiencias = EXPERIENCIALABORAL.objects.filter(
+    experiencias = ExperienciaLaboral.objects.filter(
         idperfilconqueestaactivo=datos.idperfil,
         activarparaqueseveaenfront=1
     )
-    cursos = CURSOSREALIZADOS.objects.filter(
+    cursos = CursosRealizados.objects.filter(
         idperfilconqueestaactivo=datos.idperfil,
         activarparaqueseveaenfront=1
     )
-    reconocimientos = RECONOCIMIENTOS.objects.filter(
+    Reconocimientos = Reconocimientos.objects.filter(
         idperfilconqueestaactivo=datos.idperfil,
         activarparaqueseveaenfront=1
     )
-    productos_academicos = PRODUCTOSACADEMICOS.objects.filter(
+    productos_academicos = ProductosAcademicos.objects.filter(
         idperfilconqueestaactivo=datos.idperfil,
         activarparaqueseveaenfront=1
     )
-    productos_laborales = PRODUCTOSLABORALES.objects.filter(
+    productos_laborales = ProductosLaborales.objects.filter(
         idperfilconqueestaactivo=datos.idperfil,
         activarparaqueseveaenfront=1
     )
-    ventas = VENTAS.objects.filter(
+    VentaGarage = VentaGarage.objects.filter(
         idperfilconqueestaactivo=datos.idperfil,
         activarparaqueseveaenfront=1
     )
@@ -700,8 +679,8 @@ def descargar_cv_pdf(request):
                 print(f"Error cargando certificado de curso: {e}")
                 c.certificado_base64 = None
     
-    # Convertir certificados de reconocimientos a base64
-    for r in reconocimientos:
+    # Convertir certificados de Reconocimientos a base64
+    for r in Reconocimientos:
         if r.archivo_certificado:
             try:
                 # Manejar tanto archivos locales como URLs de Cloudinary
@@ -778,8 +757,8 @@ def descargar_cv_pdf(request):
                 print(f"Error cargando certificado de reconocimiento: {e}")
                 r.certificado_base64 = None
     
-    # Convertir imágenes de ventas a base64
-    for v in ventas:
+    # Convertir imágenes de VentaGarage a base64
+    for v in VentaGarage:
         if v.imagen:
             try:
                 # Manejar tanto archivos locales como URLs de Cloudinary
@@ -811,10 +790,10 @@ def descargar_cv_pdf(request):
         'datos': datos,
         'experiencias': experiencias,
         'cursos': cursos,
-        'reconocimientos': reconocimientos,
+        'Reconocimientos': Reconocimientos,
         'productos_academicos': productos_academicos,
         'productos_laborales': productos_laborales,
-        'ventas': ventas,
+        'VentaGarage': VentaGarage,
         'es_pdf': True,
         'foto_base64': foto_base64,
         'foto_mime_type': foto_mime_type,
@@ -838,8 +817,8 @@ def descargar_cv_pdf(request):
 
 # Vistas para descargar certificados
 def descargar_certificado_curso(request, curso_id):
-    perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
-    curso = CURSOSREALIZADOS.objects.filter(idcurso=curso_id, idperfilconqueestaactivo=perfil).first() if perfil else None
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
+    curso = CursosRealizados.objects.filter(idcurso=curso_id, idperfilconqueestaactivo=perfil).first() if perfil else None
     
     if not curso or not curso.archivo_certificado:
         return HttpResponse("Certificado no encontrado", status=404)
@@ -875,8 +854,8 @@ def descargar_certificado_curso(request, curso_id):
 
 
 def descargar_certificado_reconocimiento(request, reconocimiento_id):
-    perfil = DATOSPERSONALES.objects.filter(perfilactivo=1).first()
-    reconocimiento = RECONOCIMIENTOS.objects.filter(idreconocimiento=reconocimiento_id, idperfilconqueestaactivo=perfil).first() if perfil else None
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
+    reconocimiento = Reconocimientos.objects.filter(idreconocimiento=reconocimiento_id, idperfilconqueestaactivo=perfil).first() if perfil else None
     
     if not reconocimiento or not reconocimiento.archivo_certificado:
         return HttpResponse("Certificado no encontrado", status=404)
